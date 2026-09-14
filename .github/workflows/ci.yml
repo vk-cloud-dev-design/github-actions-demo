@@ -1,0 +1,37 @@
+name: CI Pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v6
+
+      - name: Display repository files
+        run: ls -la
+
+      - name: Build application
+        run: |
+          echo "Building application..."
+          mkdir -p build
+          cp app/index.html build/
+
+      - name: Test application
+        run: |
+          test -f build/index.html
+          echo "Test passed successfully"
+
+      - name: Display build output
+        run: ls -la build
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: application
+          path: build/
