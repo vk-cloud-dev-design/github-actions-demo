@@ -1,0 +1,48 @@
+name: CI - Multiple Jobs
+
+on:
+  workflow_dispatch:
+
+jobs:
+
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v6
+
+      - name: Build application
+        run: |
+          echo "Building application..."
+          mkdir -p build
+          cp app/index.html build/
+
+      - name: Display build output
+        run: ls -la build
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: application
+          path: build/
+
+
+  test:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download build artifact
+        uses: actions/download-artifact@v5
+        with:
+          name: application
+          path: build/
+
+      - name: Display downloaded artifact
+        run: ls -la build
+
+      - name: Test application
+        run: |
+          test -f build/index.html
+          echo "Test passed successfully"
