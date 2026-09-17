@@ -1,0 +1,40 @@
+name: CI - Variables
+
+on:
+  workflow_dispatch:
+
+env:
+  APP_NAME: github-actions-demo
+  ENVIRONMENT: dev
+  BUILD_DIR: build
+
+jobs:
+
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Checkout source code
+        uses: actions/checkout@v6
+
+      - name: Display variables
+        run: |
+          echo "Application: $APP_NAME"
+          echo "Environment: $ENVIRONMENT"
+          echo "Build directory: $BUILD_DIR"
+
+      - name: Build application
+        run: |
+          echo "Building $APP_NAME"
+          mkdir -p $BUILD_DIR
+          cp app/index.html $BUILD_DIR/
+
+      - name: Verify build
+        run: |
+          test -f $BUILD_DIR/index.html
+          echo "Build successful"
+
+      - name: Display build output
+        run: |
+          ls -la $BUILD_DIR
