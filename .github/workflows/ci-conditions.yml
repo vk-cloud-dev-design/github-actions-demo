@@ -44,7 +44,7 @@ jobs:
 
   report:
     needs: test
-    if: always()
+    if: success()
     runs-on: ubuntu-latest
 
     steps:
