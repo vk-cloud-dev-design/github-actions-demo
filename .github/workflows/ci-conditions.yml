@@ -38,7 +38,7 @@ jobs:
 
       - name: Test application
         run: |
-          test -f build/new_aap.html
+          test -f build/index.html
           echo "Test passed successfully"
 
 
