@@ -1,0 +1,57 @@
+name: CI - Conditions
+
+on:
+  workflow_dispatch:
+
+jobs:
+
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v6
+
+      - name: Build application
+        run: |
+          echo "Building application..."
+          mkdir -p build
+          cp app/index.html build/
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: application
+          path: build/
+
+
+  test:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download build artifact
+        uses: actions/download-artifact@v5
+        with:
+          name: application
+          path: build/
+
+      - name: Test application
+        run: |
+          test -f build/index.html
+          echo "Test passed successfully"
+
+
+  report:
+    needs: test
+    if: success()
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Generate success report
+        run: |
+          echo "================================"
+          echo "CI PIPELINE SUCCESS"
+          echo "Build: PASSED"
+          echo "Test: PASSED"
+          echo "================================"
